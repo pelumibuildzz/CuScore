@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const MatchSchema = new mongoose.Schema(
   {
+    season: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'Season', 
+      required: true
+    },
     matchDate: {
       type: Date,
       required: true,

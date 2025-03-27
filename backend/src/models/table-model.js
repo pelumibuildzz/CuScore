@@ -7,7 +7,7 @@ const TableSchema = new mongoose.Schema(
       ref: "Season",
       required: true,
     },
-    group: { type: String, default: null }, // Only relevant in group stages
+    group: { type: String, required: true }, // Only relevant in group stages
     teams: [
       {
         team: {

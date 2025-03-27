@@ -4,8 +4,8 @@ const SeasonSchema = new mongoose.Schema(
   {
     year: { type: Number, required: true },
     name: { type: String, required: true }, // e.g., "2025 University Cup"
-    startDate: { type: Date },
-    endDate: { type: Date },
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
     // Additional metadata as needed
   },
   { timestamps: true }
