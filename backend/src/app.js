@@ -8,6 +8,7 @@ app.get("/api", (req, res) => {
   res.json({ msg: "Welcome To Cu-Score API!" });
 });
 
+app.use("/api/v1", require("./v1"));
 
 module.exports = app;
 
