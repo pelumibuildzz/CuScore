@@ -26,3 +26,5 @@ const loginAdminController = async (req, res) => {
     },
   });
 };
+
+module.exports = { registerAdminController, loginAdminController };
