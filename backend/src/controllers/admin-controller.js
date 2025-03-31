@@ -1,4 +1,4 @@
-const AdminService = require("../services/authService");
+const AdminService = require("../services/auth-service");
 const adminService = new AdminService();
 
 const registerAdminController = async (req, res) => {
