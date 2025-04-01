@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const MatchSchema = new mongoose.Schema(
   {
-    season: { 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: 'Season', 
-      required: true
+    season: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Season",
+      required: true,
     },
     matchDate: {
       type: Date,
@@ -46,30 +46,6 @@ const MatchSchema = new mongoose.Schema(
       home: [{ type: mongoose.Schema.Types.ObjectId, ref: "Player" }],
       away: [{ type: mongoose.Schema.Types.ObjectId, ref: "Player" }],
     },
-    // Record match events such as goals, assists, saves, red and yellow cards
-    events: [
-      {
-        minute: {
-          type: Number,
-          required: true,
-        },
-        type: {
-          type: String,
-          enum: ["goal", "assist", "save", "red_card", "yellow_card"],
-          required: true,
-        },
-        player: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Player",
-          required: true,
-        },
-        side: {
-          type: String,
-          enum: ["home", "away"],
-          required: true,
-        },
-      },
-    ],
   },
   { timestamps: true }
 );

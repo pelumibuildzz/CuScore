@@ -14,14 +14,14 @@ class TeamService {
   }
 
   async getAllTeams() {
-    let teamList = Team.find({});
-    if (!teamList)
+    let teamList = await Team.find({});
+    if (!teamList && teamList != [])
       throw new Error("Teams haven't been added or Error fetching teams");
     return teamList;
   }
 
   async getTeamById(temaId) {
-    let team = Team.findById(temaId);
+    let team = await Team.findById(temaId);
     if (!team) throw new Error("Team not found");
     return team;
   }
@@ -29,7 +29,7 @@ class TeamService {
   async updateTeam(teamId, teamData) {
     const { name, logo } = teamData;
     if (!name || !logo) throw new Error("All fields are required");
-    let updatedTeam = Team.findByIdAndUpdate(
+    let updatedTeam = await Team.findByIdAndUpdate(
       teamId,
       { name, logo },
       { new: true }
@@ -39,7 +39,7 @@ class TeamService {
   }
 
   async deleteTeam(teamId) {
-    let deletedTeam = Team.findByIdAndDelete(teamId);
+    let deletedTeam = await Team.findByIdAndDelete(teamId);
     if (!deletedTeam) throw new Error("Error deleting team");
     return { msg: "Team deleted successfully" };
   }

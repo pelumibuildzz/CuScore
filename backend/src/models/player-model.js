@@ -13,11 +13,16 @@ const PlayerSchema = new mongoose.Schema(
     },
     jerseyNumber: {
       type: Number,
+      required: true,
     },
-    team: {
+    teamId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Team",
       required: true,
+    },
+    active: {
+      type: Boolean,
+      default: true,
     },
   },
   { timestamps: true }
