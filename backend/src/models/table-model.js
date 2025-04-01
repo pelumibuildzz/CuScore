@@ -8,9 +8,9 @@ const TableSchema = new mongoose.Schema(
       required: true,
     },
     group: { type: String, required: true }, // Only relevant in group stages
-    teams: [
+    teamStats: [
       {
-        team: {
+        teamId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Team",
           required: true,

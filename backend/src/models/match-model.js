@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const MatchSchema = new mongoose.Schema(
   {
-    season: {
+    seasonId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Season",
       required: true,
@@ -16,12 +16,12 @@ const MatchSchema = new mongoose.Schema(
       enum: ["past", "live", "future"],
       required: true,
     },
-    homeTeam: {
+    homeTeamId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Team",
       required: true,
     },
-    awayTeam: {
+    awayTeamId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Team",
       required: true,
