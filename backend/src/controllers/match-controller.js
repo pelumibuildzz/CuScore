@@ -2,7 +2,7 @@ const MatchService = require("../services/match-service");
 const matchService = new MatchService();
 const dotenv = require("dotenv");
 dotenv.config();
-const currentYear = dotenv.process.CURRENT_YEAR;
+const currentYear = process.CURRENT_YEAR;
 
 const createMatchController = async (req, res) => {
   const { matchDate, homeTeamId, awayTeamId, stage, group, starting11, subs } =
@@ -42,7 +42,8 @@ const getMatchByIdController = async (req, res) => {
 };
 
 const updateMatchController = async (req, res) => {
-  let { matchId, updateData } = req.body;
+  let { matchId } = req.params;
+  let { updateData } = req.body;
   let updatedMatch = await matchService.updateMatch(matchId, updateData);
   if (!updatedMatch) throw new Error("Error Updating Match");
   res.status(200).json(updatedMatch);
@@ -53,4 +54,13 @@ const deleteMatchController = async (req, res) => {
   let deletedMatchMsg = await matchService.deleteMatch(matchId);
   if (!deletedMatchMsg) throw new Error("Error deleting Match");
   res.status(200).json({ deletedMatchMsg });
+};
+
+module.exports = {
+  createMatchController,
+  getAllMatchesByYearController,
+  getAllMatchesController,
+  getMatchByIdController,
+  updateMatchController,
+  deleteMatchController,
 };

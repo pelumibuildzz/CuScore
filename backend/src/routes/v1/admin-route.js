@@ -2,7 +2,7 @@ const express = require("express");
 const {
   registerAdminController,
   loginAdminController,
-} = require("../../controllers/adminController");
+} = require("../../controllers/admin-controller");
 const router = express.Router();
 
 router.use(express.json);

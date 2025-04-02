@@ -8,7 +8,9 @@ router.get("/", (req, res) => {
   res.json({ msg: "Welcome To Cu-Score API! Version 1" });
 });
 
-router.use("/admin", require("./admin-route"));
-router.use("/teams", require("./team-route"));
+router.use("/admin", require("./routes/v1/admin-route"));
+router.use("/teams", require("./routes/v1/team-route"));
+router.use("/players", require("./routes/v1/player-route"));
+router.use("/matches", require("./routes/v1/match-route"));
 
 module.exports = router;
