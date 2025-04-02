@@ -37,7 +37,7 @@ class TeamService {
     if (!name || !logo) throw new Error("All fields are required");
     let updatedTeam = await Team.findByIdAndUpdate(
       teamId,
-      { name, logo },
+      { ...(name && { name }), ...(logo && { logo }) },
       { new: true }
     );
     if (!updatedTeam) throw new Error("Error updating team");

@@ -55,12 +55,16 @@ class PlayerService {
 
     if (!name && !position && !jerseyNumber && !teamId)
       throw new Error("Atleast One Field is Required to Update Player");
-    let player = await Player.findByIdAndUpdate(playerId, {
-      name,
-      position,
-      jerseyNumber,
-      teamId,
-    });
+    let player = await Player.findByIdAndUpdate(
+      playerId,
+      {
+        ...(name && { name }),
+        ...(position && { position }),
+        ...(jerseyNumber && { jerseyNumber }),
+        ...(teamId && { teamId }),
+      },
+      { new: true }
+    );
     if (!player) throw new Error("Error Updating Player");
     return player;
   }
