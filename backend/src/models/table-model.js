@@ -2,9 +2,8 @@ const mongoose = require("mongoose");
 
 const TableSchema = new mongoose.Schema(
   {
-    season: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Season",
+    year: {
+      type: Number,
       required: true,
     },
     group: { type: String, required: true }, // Only relevant in group stages

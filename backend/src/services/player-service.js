@@ -20,7 +20,7 @@ class PlayerService {
   }
 
   async getAllPlayers() {
-    let playerList = await Player.find({});
+    let playerList = await Player.find({}).sort({ teamId: 1 });
     if (!playerList && playerList != [])
       throw new Error("Error Fetching Player");
     return playerList;
