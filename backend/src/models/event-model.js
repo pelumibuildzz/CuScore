@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const EventSchema = new mongoose.Schema(
   {
+    year: {
+      type: Number,
+      required: true,
+    },
     matchId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Match",
