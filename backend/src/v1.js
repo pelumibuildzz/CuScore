@@ -12,5 +12,6 @@ router.use("/admin", require("./routes/v1/admin-route"));
 router.use("/teams", require("./routes/v1/team-route"));
 router.use("/players", require("./routes/v1/player-route"));
 router.use("/matches", require("./routes/v1/match-route"));
+router.use("/events", require("./routes/v1/event-route"));
 
 module.exports = router;

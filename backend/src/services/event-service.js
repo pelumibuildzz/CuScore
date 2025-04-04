@@ -27,8 +27,8 @@ class EventService {
     return newEvent;
   }
 
-  async getAllEvents() {
-    let eventList = await Event.find({});
+  async getAllEvents(year) {
+    let eventList = await Event.find({ year });
     if (!eventList && eventList != []) throw new Error("Error fetching Events");
     return eventList;
   }
@@ -97,3 +97,5 @@ class EventService {
     return { msg: "Event Successfully Deleted" };
   }
 }
+
+module.exports = EventService;
