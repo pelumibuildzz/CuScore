@@ -6,7 +6,11 @@ const TableSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    group: { type: String, required: true }, // Only relevant in group stages
+    group: {
+      type: String,
+      enum: ["A", "B", "C", "D", "E", "F", "G", "H"],
+      required: true,
+    }, // Only relevant in group stages
     teamStats: [
       {
         teamId: {

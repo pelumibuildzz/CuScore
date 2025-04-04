@@ -12,8 +12,8 @@ const MatchSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["past", "live", "future"],
-      default: "future",
+      enum: ["fulltime", "live", "upcoming"],
+      default: "upcoming",
     },
     homeTeamId: {
       type: mongoose.Schema.Types.ObjectId,

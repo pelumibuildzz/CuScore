@@ -2,7 +2,7 @@ const Match = require("../models/match-model");
 const mongoose = require("mongoose");
 
 class MatchService {
-  async createMatch(updateData) {
+  async createMatch(data) {
     const {
       year,
       matchDate,
@@ -12,7 +12,7 @@ class MatchService {
       group,
       starting11,
       subs,
-    } = updateData;
+    } = data;
     if (!year || !matchDate || !homeTeamId || !awayTeamId || !stage)
       throw new Error("All fields are required");
     if (
