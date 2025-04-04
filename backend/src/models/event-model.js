@@ -34,6 +34,7 @@ const EventSchema = new mongoose.Schema(
         "red_card",
         "yellow_card",
         "substitution",
+        "penaltyshootout",
       ],
       required: true,
     },

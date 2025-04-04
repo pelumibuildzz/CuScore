@@ -23,6 +23,15 @@ class TableService {
     return newTable;
   }
 
+  async getTableByTeam(teamId) {
+    if (!teamId) throw new Error("TeamId is Required");
+    if (!mongoose.Types.ObjectId.isValid(teamId))
+      throw new Error("Invalid Id Format");
+    let table = await Table.findOne({ "teamStats.teamId": teamId });
+    if (!table) throw new Error("Error Finding Table");
+    return table;
+  }
+
   async getTablesByYear(year) {
     let tableList = await Table.find({ year });
     if (!tableList && tableList != []) throw new Error("Error Finding tables");

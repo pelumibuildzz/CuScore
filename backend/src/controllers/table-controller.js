@@ -24,6 +24,14 @@ const getTableByIdController = async (req, res) => {
   res.status(200).json(table);
 };
 
+const updateTableController = async (req, res) => {
+  let { tableId } = req.params;
+  let { matchData } = req.body;
+  let updatedTable = await tableService.updateTableStats(tableId, matchData);
+  if (!updatedTable) throw new Error("Error updating table stats");
+  res.status(200).json(updatedTable);
+};
+
 const deleteTableController = async (req, res) => {
   let { tableId } = req.params;
   let deletedTable = await tableService.deleteTable(tableId);
@@ -36,4 +44,5 @@ module.exports = {
   getCurrentTablesController,
   getTableByIdController,
   deleteTableController,
+  updateTableController,
 };
