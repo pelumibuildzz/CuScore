@@ -1,5 +1,6 @@
 const AdminService = require("../services/auth-service");
 const adminService = new AdminService();
+const { createError } = require("../middlewares/error-handler");
 
 const registerAdminController = async (req, res) => {
   let { name, email, password } = req.body;

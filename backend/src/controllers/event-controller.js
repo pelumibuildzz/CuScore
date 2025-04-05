@@ -1,5 +1,6 @@
 const EventService = require("../services/event-service");
 const eventService = new EventService();
+const { createError } = require("../middlewares/error-handler");
 
 const dotenv = require("dotenv");
 dotenv.config();
