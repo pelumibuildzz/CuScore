@@ -1,4 +1,5 @@
 const express = require("express");
+const { errorHandler } = require("./middlewares/error-handler");
 
 const app = express();
 
@@ -9,6 +10,8 @@ app.get("/api", (req, res) => {
 });
 
 app.use("/api/v1", require("./v1"));
+
+app.use(errorHandler);
 
 module.exports = app;
 

@@ -1,55 +1,57 @@
 const Team = require("../models/team-model");
 const mongoose = require("mongoose");
+const { createError } = require("../middlewares/error-handler");
 
 class TeamService {
-  async createTeam(teamData) {
+  async createTeam(teamData, next) {
     const { name, logo } = teamData;
-    if (!name || !logo) throw new Error("All fields are required");
-    const newTeam = new Team({
-      name,
-      logo,
-    });
-    if (!newTeam) throw new Error("Error creating new team");
+    if (!name || !logo)
+      return next(createError("All fields are required", 400));
+    const newTeam = new Team({ name, logo });
+    if (!newTeam) return next(createError("Error creating new team", 500));
     await newTeam.save();
     return newTeam;
   }
 
-  async getAllTeams() {
+  async getAllTeams(next) {
     let teamList = await Team.find({});
     if (!teamList && teamList != [])
-      throw new Error("Teams haven't been added or Error fetching teams");
+      return next(
+        createError("Teams haven't been added or Error fetching teams", 404)
+      );
     return teamList;
   }
 
-  async getTeamById(teamId) {
-    let team = await Team.findById(teamId);
+  async getTeamById(teamId, next) {
     if (!mongoose.Types.ObjectId.isValid(teamId))
-      throw new Error("Invalid Id Format");
-    if (!team) throw new Error("Team not found");
+      return next(createError("Invalid Id Format", 400));
+    let team = await Team.findById(teamId);
+    if (!team) return next(createError("Team not found", 404));
     return team;
   }
 
-  async updateTeam(teamId, teamData) {
-    if (!teamId) throw new Error("TeamId is Required");
+  async updateTeam(teamId, teamData, next) {
+    if (!teamId) return next(createError("TeamId is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(teamId))
-      throw new Error("Invalid Id Format");
+      return next(createError("Invalid Id Format", 400));
     const { name, logo } = teamData;
-    if (!name || !logo) throw new Error("All fields are required");
+    if (!name || !logo)
+      return next(createError("All fields are required", 400));
     let updatedTeam = await Team.findByIdAndUpdate(
       teamId,
       { ...(name && { name }), ...(logo && { logo }) },
       { new: true }
     );
-    if (!updatedTeam) throw new Error("Error updating team");
+    if (!updatedTeam) return next(createError("Error updating team", 500));
     return updatedTeam;
   }
 
-  async deleteTeam(teamId) {
-    if (!teamId) throw new Error("TeamId is Required");
+  async deleteTeam(teamId, next) {
+    if (!teamId) return next(createError("TeamId is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(teamId))
-      throw new Error("Invalid Id Format");
+      return next(createError("Invalid Id Format", 400));
     let deletedTeam = await Team.findByIdAndDelete(teamId);
-    if (!deletedTeam) throw new Error("Error deleting team");
+    if (!deletedTeam) return next(createError("Error deleting team", 500));
     return { msg: "Team deleted successfully" };
   }
 }

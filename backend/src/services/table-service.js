@@ -1,16 +1,21 @@
 const Table = require("../models/table-model");
 const mongoose = require("mongoose");
+const { createError } = require("../middlewares/error-handler");
 
 const TEAM_PER_GROUP = 4;
 
 class TableService {
-  async createTable(data) {
+  async createTable(data, next) {
     const { group, teamList } = data;
 
     if (!group || !teamList)
-      throw new Error("All fields are Required: group and teamId List");
+      return next(
+        createError("All fields are Required: group and teamId List", 400)
+      );
     if (teamList.length != TEAM_PER_GROUP)
-      throw new Error(`Number of teams in list should be ${TEAM_PER_GROUP}`);
+      return next(
+        createError(`Number of teams in list should be ${TEAM_PER_GROUP}`, 400)
+      );
 
     const newTable = new Table({
       year,
@@ -18,49 +23,53 @@ class TableService {
       teamStats: teamList,
     });
 
-    if (!newTable) throw new Error("Erro Creating Table");
+    if (!newTable) return next(createError("Erro Creating Table", 500));
     await newTable.save();
     return newTable;
   }
 
-  async getTableByTeam(teamId) {
-    if (!teamId) throw new Error("TeamId is Required");
+  async getTableByTeam(teamId, next) {
+    if (!teamId) return next(createError("TeamId is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(teamId))
-      throw new Error("Invalid Id Format");
+      return next(createError("Invalid Id Format", 400));
     let table = await Table.findOne({ "teamStats.teamId": teamId });
-    if (!table) throw new Error("Error Finding Table");
+    if (!table) return next(createError("Error Finding Table", 404));
     return table;
   }
 
-  async getTablesByYear(year) {
+  async getTablesByYear(year, next) {
     let tableList = await Table.find({ year });
-    if (!tableList && tableList != []) throw new Error("Error Finding tables");
+    if (!tableList && tableList != [])
+      return next(createError("Error Finding tables", 404));
     return tableList;
   }
 
-  async getTableById(tableId) {
-    if (!tableId) throw new Error("Id is Required");
+  async getTableById(tableId, next) {
+    if (!tableId) return next(createError("Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(tableId))
-      throw new Error("Invalid Id format");
+      return next(createError("Invalid Id format", 400));
 
     let table = await Table.findById(tableId);
-    if (!table) throw new Error("Erro Finding Table");
+    if (!table) return next(createError("Error Finding Table", 404));
     return table;
   }
 
-  async updateTableStats(tableId, matchData) {
-    if (!tableId) throw new Error("Id is Required");
+  async updateTableStats(tableId, matchData, next) {
+    if (!tableId) return next(createError("Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(tableId))
-      throw new Error("Invalid Id format");
+      return next(createError("Invalid Id format", 400));
 
     let { homeId, awayId, homeScore, awayScore } = matchData;
     if (!homeId || !awayId || homeScore == null || awayScore == null)
-      throw new Error(
-        "MatchData should have: homeId, awayId, homeScore, awayScore"
+      return next(
+        createError(
+          "MatchData should have: homeId, awayId, homeScore, awayScore",
+          400
+        )
       );
 
     let table = await Table.findById(tableId);
-    if (!table) throw new Error("Table not found");
+    if (!table) return next(createError("Error updating table", 404));
 
     table.teamStats = table.teamStats.map((team) => {
       if (team.teamId.toString() === homeId) {
@@ -99,12 +108,12 @@ class TableService {
     return table;
   }
 
-  async deleteTable(tableId) {
-    if (!tableId) throw new Error("Id is Required");
+  async deleteTable(tableId, next) {
+    if (!tableId) return next(createError("Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(tableId))
-      throw new Error("Invalid Id format");
+      return next(createError("Invalid Id format", 400));
     let deletedTable = await Table.findByIdAndDelete(tableId);
-    if (!deletedTable) throw new Error("Error delteing Table");
+    if (!deletedTable) return next(createError("Error delteing Table", 500));
     return { msg: "Table Successfully Deleted" };
   }
 }

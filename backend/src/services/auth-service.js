@@ -2,21 +2,22 @@ const Admin = require("../models/admin-model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const { createError } = require("../middlewares/error-handler");
 dotenv.config();
 
 const saltRounds = 10;
 
 class AdminService {
-  async registerAdmin(adminData) {
+  async registerAdmin(adminData, next) {
     const { username, email, password } = adminData;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const isEmail = this.isEmail(email);
     if (!isEmail) {
-      throw new Error("Invalid Email");
+      return next(createError(400, "Invalid Email"));
     }
 
     if (!username || !email || !password) {
-      throw new Error("All fields are required");
+      return next(createError("All fields are required", 400));
     }
     const newAdmin = new Admin({
       username,
@@ -24,28 +25,28 @@ class AdminService {
       password: hashedPassword,
     });
     if (!newAdmin) {
-      throw new Error("Error creating new admin");
+      return next(createError("Error creating new admin", 500));
     }
     newAdmin.save();
     return newAdmin;
   }
 
-  async loginAdmin(adminData) {
+  async loginAdmin(adminData, next) {
     const { email, password } = adminData;
     const adminExsist = await Admin.findOne({ email });
     const isEmail = this.isEmail(email);
     if (!isEmail) {
-      throw new Error("Invalid Email");
+      return next(createError("Invalid Email", 400));
     }
     if (!adminExsist) {
-      throw new Error("Admin does not exist");
+      return next(createError("Admin does not exist", 404));
     }
     const isPasswordCorrect = await bcrypt.compare(
       password,
       adminExsist.password
     );
     if (!isPasswordCorrect) {
-      throw new Error("Incorrect Password");
+      return next(createError("Incorrect Password", 401));
     }
     const token = this.generateToken(adminExsist);
     return {

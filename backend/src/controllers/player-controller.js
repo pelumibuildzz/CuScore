@@ -1,5 +1,6 @@
 const PlayerService = require("../services/player-service");
 const playerService = new PlayerService();
+const { createError } = require("../middlewares/error-handler");
 
 const createPlayerController = async (req, res) => {
   const { name, position, jerseyNumber, teamId } = req.body;
@@ -9,41 +10,41 @@ const createPlayerController = async (req, res) => {
     jerseyNumber,
     teamId,
   });
-  if (!newPlayer) throw new Error("Error Creating Player");
+  if (!newPlayer) return next(createError("Error Creating User", 500));
   res.status(200).json(newPlayer);
 };
 
 const getAllPlayersController = async (req, res) => {
   let players = await playerService.getAllPlayers();
-  if (!players) throw new Error("Error Fetching Players");
+  if (!players) return next(createError("Error Fetching Player", 500));
   res.status(200).json(players);
 };
 
 const getPlayerByIdController = async (req, res) => {
   const { playerId } = req.params;
   let player = await playerService.getPlayerById(playerId);
-  if (!player) throw new Error("Error Fetching Player");
+  if (!player) return next(createError("Error Fetching Player", 500));
   res.status(200).json(player);
 };
 
 const getPlayerByTeamIdController = async (req, res) => {
   const { teamId } = req.params;
   let players = await playerService.getPlayerByTeamId(teamId);
-  if (!players) throw new Error("Error Fetching Players");
+  if (!players) return next(createError("Error Fetching Player", 500));
   res.status(200).json(players);
 };
 
 const updatePlayerController = async (req, res) => {
   const { playerId, updateData } = req.body;
   let updatedPlayer = await playerService.updatePlayer(playerId, updateData);
-  if (!updatedPlayer) throw new Error("Error Updating Player");
+  if (!updatedPlayer) return next(createError("Error Updating Player", 500));
   res.status(200).json(updatedPlayer);
 };
 
 const deletePlayerController = async (req, res) => {
   const { playerId } = req.params;
   let deletedPlayer = await playerService.deletePlayer(playerId);
-  if (!deletedPlayer) throw new Error("Error Deleting Player");
+  if (!deletedPlayer) return next(createError("Error Deleting Player", 500));
   res.status(200).json(deletedPlayer);
 };
 

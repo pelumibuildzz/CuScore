@@ -12,7 +12,7 @@ const connectWithRetry = () => {
   console.log(`MongoDB connection attempt ${retries + 1}`);
 
   mongoose
-    .connect(mongoUrl, {})
+    .connect(mongoUrl)
     .then(() => {
       console.log("Connected to database");
       app.listen(PORT, () => {
