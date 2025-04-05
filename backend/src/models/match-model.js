@@ -12,7 +12,7 @@ const MatchSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["fulltime", "live", "upcoming"],
+      enum: ["fulltime", "live", "upcoming", "extra_time", "penalty_shootout"],
       default: "upcoming",
     },
     homeTeamId: {

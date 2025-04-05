@@ -16,6 +16,10 @@ const createEventController = async (req, res) => {
     type,
   });
   if (!newEvent) return next(createError("Error Creating Event", 404));
+
+  const io = req.app.get("io");
+  io.emit("newEvent", newEvent);
+
   res.status(200).json(newEvent);
 };
 
