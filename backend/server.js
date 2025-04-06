@@ -3,11 +3,12 @@ const { config } = require("./src/config/config.js");
 const mongoose = require("mongoose");
 const http = require("http");
 const { Server } = require("socket.io");
+require("dotenv").config;
 
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: process.env.CLIENT_URL,
     methods: ["GET", "POST"],
   },
 });
