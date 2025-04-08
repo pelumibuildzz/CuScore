@@ -9,7 +9,7 @@ const {
 } = require("../../controllers/match-controller");
 const router = express.Router();
 
-router.use(express.json);
+router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
 router.post("/", authenticateUserwebtoken, createMatchController);

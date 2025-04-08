@@ -3,7 +3,7 @@ const Event = require("../models/event-model");
 const mongoose = require("mongoose");
 
 class EventService {
-  async createEvent(eventData) {
+  async createEvent(eventData, next) {
     let { year, matchId, playerId, teamId, minute, type } = eventData;
     if ((!year, !matchId || !playerId || !teamId || !minute || !type))
       return next(
@@ -30,14 +30,14 @@ class EventService {
     return newEvent;
   }
 
-  async getAllEvents(year) {
+  async getAllEvents(year, next) {
     let eventList = await Event.find({ year });
     if (!eventList && eventList != [])
       return next(createError("Error fetching Events", 500));
     return eventList;
   }
 
-  async getAllEventsByTeam(teamId) {
+  async getAllEventsByTeam(teamId, next) {
     if (!teamId) return next(createError("Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(teamId))
       return next(createError("Invalid Id Format", 400));
@@ -47,7 +47,7 @@ class EventService {
     return eventList;
   }
 
-  async getAllCurrentEventsByTeam(year, teamId) {
+  async getAllCurrentEventsByTeam(year, teamId, next) {
     if (!year || !teamId) return next(createError("Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(teamId))
       return next(createError("Invalid Id Format", 400));
@@ -57,7 +57,7 @@ class EventService {
     return eventList;
   }
 
-  async getEventsByMatch(matchId) {
+  async getEventsByMatch(matchId, next) {
     if (!matchId) return next(createError("Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(matchId))
       return next(createError("Invalid Id Format", 400));
@@ -67,7 +67,7 @@ class EventService {
     return eventList;
   }
 
-  async getAllEventsByPlayer(playerId) {
+  async getAllEventsByPlayer(playerId, next) {
     if (!playerId) return next(createError("Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(playerId))
       return next(createError("Invalid Id Format", 400));
@@ -77,7 +77,7 @@ class EventService {
     return eventList;
   }
 
-  async getAllCurrentEventsByPlayer(year, playerId) {
+  async getAllCurrentEventsByPlayer(year, playerId, next) {
     if (!year || !playerId) throw new Error("Year and Id are Required");
     if (!mongoose.Types.ObjectId.isValid(playerId))
       return next(createError("Invalid Id Format", 400));
@@ -87,7 +87,7 @@ class EventService {
     return eventList;
   }
 
-  async getEventById(eventId) {
+  async getEventById(eventId, next) {
     if (!eventId) return next(createError("Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(eventId))
       return next(createError("Invalid Id Format", 400));
@@ -96,7 +96,7 @@ class EventService {
     return event;
   }
 
-  async deleteEvent(eventId) {
+  async deleteEvent(eventId, next) {
     if (!eventId) return next(createError("Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(eventId))
       return next(createError("Invalid Id Format", 400));

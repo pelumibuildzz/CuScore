@@ -2,10 +2,10 @@ const AdminService = require("../services/auth-service");
 const adminService = new AdminService();
 const { createError } = require("../middlewares/error-handler");
 
-const registerAdminController = async (req, res) => {
+const registerAdminController = async (req, res, next) => {
   let { name, email, password } = req.body;
   let data = { name, email, password };
-  let admin = await adminService.registerAdmin(data);
+  let admin = await adminService.registerAdmin(data, next);
   if (!admin) return next(createError("Error creating new admin", 500));
   res.status(200).json({
     data: {
@@ -15,10 +15,10 @@ const registerAdminController = async (req, res) => {
   });
 };
 
-const loginAdminController = async (req, res) => {
+const loginAdminController = async (req, res, next) => {
   let { email, password } = req.body;
   let data = { email, password };
-  let admin = await adminService.loginAdmin(data);
+  let admin = await adminService.loginAdmin(data, next);
   if (!admin) return next(createError("Error Logging in admin", 500));
   res.status(200).json({
     data: {

@@ -10,47 +10,50 @@ const dotenv = require("dotenv");
 dotenv.config();
 const currentYear = process.CURRENT_YEAR;
 
-const createMatchController = async (req, res) => {
+const createMatchController = async (req, res, next) => {
   const { matchDate, homeTeamId, awayTeamId, stage, group, starting11, subs } =
     req.body;
-  let newMatch = await matchService.createMatch({
-    year: currentYear,
-    matchDate,
-    homeTeamId,
-    awayTeamId,
-    stage,
-    group,
-    starting11,
-    subs,
-  });
+  let newMatch = await matchService.createMatch(
+    {
+      year: currentYear,
+      matchDate,
+      homeTeamId,
+      awayTeamId,
+      stage,
+      group,
+      starting11,
+      subs,
+    },
+    next
+  );
   if (!newMatch) return next(createError("Error creating match", 500));
   res.status(200).json(newMatch);
 };
 
-const getAllMatchesByYearController = async (req, res) => {
+const getAllMatchesByYearController = async (req, res, next) => {
   const { year } = req.params;
-  let matchList = await matchService.getAllMatchesByYear(year);
+  let matchList = await matchService.getAllMatchesByYear(year, next);
   if (!matchList) return next(createError("Error fetching matches", 500));
   res.status(200).json(matchList);
 };
 
-const getAllMatchesController = async (req, res) => {
-  let matchList = await matchService.getAllMatches();
+const getAllMatchesController = async (req, res, next) => {
+  let matchList = await matchService.getAllMatches(next);
   if (!matchList) return next(createError("Error fetching matches", 500));
   res.status(200).json(matchList);
 };
 
-const getMatchByIdController = async (req, res) => {
+const getMatchByIdController = async (req, res, next) => {
   let { matchId } = req.params;
-  let match = await matchService.getMatchById(matchId);
+  let match = await matchService.getMatchById(matchId, next);
   if (!match) return next(createError("Error fetching matches", 500));
-  return match;
+  res.status(200).json(match);
 };
 
-const updateMatchController = async (req, res) => {
+const updateMatchController = async (req, res, next) => {
   let { matchId } = req.params;
   let { updateData } = req.body;
-  let updatedMatch = await matchService.updateMatch(matchId, updateData);
+  let updatedMatch = await matchService.updateMatch(matchId, updateData, next);
   if (!updatedMatch) return next(createError("Error Updating Match", 500));
 
   let tableId;
@@ -59,12 +62,12 @@ const updateMatchController = async (req, res) => {
   if (updateData.status == "fulltime") {
     let { homeTeamId, awayTeamId } = updatedMatch;
 
-    let table = await tableService.getTableByTeam(homeTeamId);
+    let table = await tableService.getTableByTeam(homeTeamId, next);
     if (!table) return next(createError("Error fetching table", 500));
 
     tableId = table._id;
 
-    let eventList = await eventService.getEventsByMatch(matchId);
+    let eventList = await eventService.getEventsByMatch(matchId, next);
     if (!eventList) return next(createError("Error fetching events", 500));
     let homescore = 0,
       awayscore = 0;
@@ -85,15 +88,19 @@ const updateMatchController = async (req, res) => {
     matchData.awayScore = awayscore;
   }
 
-  let updatedTable = tableService.updateTableStats(tableId, matchData);
+  let updatedTable = await tableService.updateTableStats(
+    tableId,
+    matchData,
+    next
+  );
   if (!updatedTable) return next(createError("Error Updating table", 500));
 
   res.status(200).json(updatedMatch);
 };
 
-const deleteMatchController = async (req, res) => {
+const deleteMatchController = async (req, res, next) => {
   let { matchId } = req.params;
-  let deletedMatchMsg = await matchService.deleteMatch(matchId);
+  let deletedMatchMsg = await matchService.deleteMatch(matchId, next);
   if (!deletedMatchMsg) return next(createError("Error deleting Match", 500));
   res.status(200).json({ deletedMatchMsg });
 };

@@ -6,16 +6,19 @@ const dotenv = require("dotenv");
 dotenv.config();
 const currentYear = process.CURRENT_YEAR;
 
-const createEventController = async (req, res) => {
+const createEventController = async (req, res, next) => {
   const { matchId, playerId, teamId, minute, type } = req.body;
-  let newEvent = await eventService.createEvent({
-    year: currentYear,
-    matchId,
-    playerId,
-    teamId,
-    minute,
-    type,
-  });
+  let newEvent = await eventService.createEvent(
+    {
+      year: currentYear,
+      matchId,
+      playerId,
+      teamId,
+      minute,
+      type,
+    },
+    next
+  );
   if (!newEvent) return next(createError("Error Creating Event", 404));
 
   const io = req.app.get("io");
@@ -24,65 +27,67 @@ const createEventController = async (req, res) => {
   res.status(200).json(newEvent);
 };
 
-const getAllEventsController = async (req, res) => {
+const getAllEventsController = async (req, res, next) => {
   const year = currentYear;
-  let eventList = await eventService.getAllEvents(year);
+  let eventList = await eventService.getAllEvents(year, next);
   if (!eventList && eventList != [])
     return next(createError("Error fetching Events", 500));
   res.status(200).json(eventList);
 };
 
-const getEventsByTeamController = async (req, res) => {
+const getEventsByTeamController = async (req, res, next) => {
   const { teamId } = req.params;
   let eventList = await eventService.getAllCurrentEventsByTeam(
     currentYear,
-    teamId
+    teamId,
+    next
   );
   if (!eventList) return next(createError("Error fetching Events", 500));
   res.status(200).json(eventList);
 };
 
-const getEventsByMatchController = async (req, res) => {
+const getEventsByMatchController = async (req, res, next) => {
   const { matchId } = req.params;
-  let eventList = await eventService.getEventsByMatch(matchId);
+  let eventList = await eventService.getEventsByMatch(matchId, next);
   if (!eventList) return next(createError("Error fetching Events", 500));
   res.status(200).json(eventList);
 };
 
-const getEventsByPlayerController = async (req, res) => {
+const getEventsByPlayerController = async (req, res, next) => {
   const { playerId } = req.params;
   let eventList = await eventService.getAllCurrentEventsByPlayer(
     currentYear,
-    playerId
+    playerId,
+    next
   );
   if (!eventList) return next(createError("Error fetching Events", 500));
   res.status(200).json(eventList);
 };
 
-const getAllEventsByTeamController = async (req, res) => {
+const getAllEventsByTeamController = async (req, res, next) => {
   const { teamId } = req.params;
-  let eventList = await eventService.getAllEventsByTeam(teamId);
+  let eventList = await eventService.getAllEventsByTeam(teamId, next);
   if (!eventList) return next(createError("Error fetching Events", 500));
   res.status(200).json(eventList);
 };
 
-const getAllEventsByPlayerController = async (req, res) => {
+const getAllEventsByPlayerController = async (req, res, next) => {
   const { playerId } = req.params;
-  let eventList = await eventService.getAllEventsByPlayer(playerId);
+  let eventList = await eventService.getAllEventsByPlayer(playerId, next);
   if (!eventList) return next(createError("Error fetching Events", 500));
   res.status(200).json(eventList);
 };
 
-const getEventByIdController = async (req, res) => {
+const getEventByIdController = async (req, res, next) => {
   const { eventId } = req.params;
-  let event = await eventService.getEventById(eventId);
+  let event = await eventService.getEventById(eventId, next);
   if (!event) return next(createError("Error fetching Events", 500));
   res.status(200).json(event);
 };
 
-const deleteEventByIdController = async (req, res) => {
+const deleteEventByIdController = async (req, res, next) => {
   const { eventId } = req.params;
-  let event = await eventService.deleteEvent(eventId);
+  let event = await eventService.deleteEvent(eventId, next);
   if (!event) return next(createError("Error fetching Events", 500));
   res.status(200).json(event);
 };
