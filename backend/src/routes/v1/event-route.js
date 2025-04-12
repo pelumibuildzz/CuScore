@@ -19,7 +19,7 @@ router.get("/", getAllEventsController);
 router.get("/team/:teamId", getEventsByTeamController);
 router.get("/match/:matchId", getEventsByMatchController);
 router.get("/player/:playerId", getEventsByPlayerController);
-router.get("/:eventId", authenticateUserwebtoken, getEventByIdController);
+router.get("/:eventId", getEventByIdController);
 router.delete("/:eventId", authenticateUserwebtoken, deleteEventByIdController);
 
 module.exports = router;

@@ -15,9 +15,9 @@ router.use(express.urlencoded({ extended: true }));
 
 router.post("/", authenticateUserwebtoken, createPlayerController);
 router.get("/", getAllPlayersController);
-router.get("/:id", getPlayerByIdController);
+router.get("/:playerId", getPlayerByIdController);
 router.get("/team/:teamId", getPlayerByTeamIdController);
-router.put("/:id", authenticateUserwebtoken, updatePlayerController);
-router.delete("/:id", authenticateUserwebtoken, deletePlayerController);
+router.put("/:playerId", authenticateUserwebtoken, updatePlayerController);
+router.delete("/:playerId", authenticateUserwebtoken, deletePlayerController);
 
 module.exports = router;

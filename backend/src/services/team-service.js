@@ -34,9 +34,11 @@ class TeamService {
     if (!teamId) return next(createError("TeamId is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(teamId))
       return next(createError("Invalid Id Format", 400));
+    if (!teamData) return next(createError("Team data is required", 400));
     const { name, logo } = teamData;
-    if (!name || !logo)
-      return next(createError("All fields are required", 400));
+    console.log(teamData);
+    if (!name && !logo)
+      return next(createError("At least one field is required", 400));
     let updatedTeam = await Team.findByIdAndUpdate(
       teamId,
       { ...(name && { name }), ...(logo && { logo }) },

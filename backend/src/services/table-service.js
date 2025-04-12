@@ -5,7 +5,7 @@ const { createError } = require("../middlewares/error-handler");
 const TEAM_PER_GROUP = 4;
 
 class TableService {
-  async createTable(data, next) {
+  async createTable(year, data, next) {
     const { group, teamList } = data;
 
     if (!group || !teamList)
@@ -23,13 +23,13 @@ class TableService {
       teamStats: teamList,
     });
 
-    if (!newTable) return next(createError("Erro Creating Table", 500));
+    if (!newTable) return next(createError("Error Creating Table", 500));
     await newTable.save();
     return newTable;
   }
 
   async getTableByTeam(teamId, next) {
-    if (!teamId) return next(createError("TeamId is Required", 400));
+    if (!teamId) return next(createError("Team Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(teamId))
       return next(createError("Invalid Id Format", 400));
     let table = await Table.findOne({ "teamStats.teamId": teamId });
@@ -45,7 +45,7 @@ class TableService {
   }
 
   async getTableById(tableId, next) {
-    if (!tableId) return next(createError("Id is Required", 400));
+    if (!tableId) return next(createError("Table Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(tableId))
       return next(createError("Invalid Id format", 400));
 
@@ -55,7 +55,7 @@ class TableService {
   }
 
   async updateTableStats(tableId, matchData, next) {
-    if (!tableId) return next(createError("Id is Required", 400));
+    if (!tableId) return next(createError("Table Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(tableId))
       return next(createError("Invalid Id format", 400));
 
@@ -109,7 +109,7 @@ class TableService {
   }
 
   async deleteTable(tableId, next) {
-    if (!tableId) return next(createError("Id is Required", 400));
+    if (!tableId) return next(createError("Table Id is Required", 400));
     if (!mongoose.Types.ObjectId.isValid(tableId))
       return next(createError("Invalid Id format", 400));
     let deletedTable = await Table.findByIdAndDelete(tableId);

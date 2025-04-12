@@ -112,28 +112,36 @@ class MatchService {
 
     if (!status && !group && !stage && !starting11 && !subs)
       return next(
-        createError("Atleast One Field is Required to Update Match", 400)
+        createError("At least One Field is Required to Update Match", 400)
       );
 
-    let newstarting11 = {};
-    if (starting11.home !== undefined) newstarting11.home = starting11.home;
-    if (starting11.away !== undefined) newstarting11.away = starting11.away;
+    let updateFields = {
+      ...(stage && { stage }),
+      ...(status && { status }),
+      ...(group && { group }),
+    };
 
-    let newsubs = {};
-    if (subs.home !== undefined) newsubs.home = subs.home;
-    if (subs.away !== undefined) newsubs.away = subs.away;
+    if (starting11) {
+      let newstarting11 = {};
+      if (starting11.home !== undefined) newstarting11.home = starting11.home;
+      if (starting11.away !== undefined) newstarting11.away = starting11.away;
+      if (Object.keys(newstarting11).length == 11) {
+        updateFields.starting11 = newstarting11;
+      }
+    }
 
-    let updatedMatch = await Match.findByIdAndUpdate(
-      matchId,
-      {
-        ...(stage && { stage }),
-        ...(status && { status }),
-        ...(group && { group }),
-        starting11: newstarting11,
-        subs: newsubs,
-      },
-      { new: true }
-    );
+    if (subs) {
+      let newsubs = {};
+      if (subs.home !== undefined) newsubs.home = subs.home;
+      if (subs.away !== undefined) newsubs.away = subs.away;
+      if (Object.keys(newsubs).length > 0) {
+        updateFields.subs = newsubs;
+      }
+    }
+
+    let updatedMatch = await Match.findByIdAndUpdate(matchId, updateFields, {
+      new: true,
+    });
 
     if (!updatedMatch) return next(createError("Error Updating Match", 500));
     return updatedMatch;

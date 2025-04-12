@@ -20,18 +20,20 @@ class EventService {
       return next(createError("one of the Id's format is Invalid", 400));
 
     let newEvent = new Event({
+      year,
       matchId,
       playerId,
       teamId,
       minute,
       type,
     });
+    newEvent.save();
     if (!newEvent) return next(createError("Error Creating Event", 404));
     return newEvent;
   }
 
   async getAllEvents(year, next) {
-    let eventList = await Event.find({ year });
+    let eventList = await Event.find({ year }).sort({ createdAt: 1 });
     if (!eventList && eventList != [])
       return next(createError("Error fetching Events", 500));
     return eventList;

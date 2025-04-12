@@ -10,15 +10,13 @@ const saltRounds = 10;
 class AdminService {
   async registerAdmin(adminData, next) {
     const { username, email, password } = adminData;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const isEmail = this.isEmail(email);
-    if (!isEmail) {
-      return next(createError(400, "Invalid Email"));
-    }
-
     if (!username || !email || !password) {
       return next(createError("All fields are required", 400));
     }
+    if (!this.isEmail(email)) {
+      return next(createError("Invalid Email", 400));
+    }
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
     const newAdmin = new Admin({
       username,
       email,

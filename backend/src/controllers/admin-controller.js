@@ -3,28 +3,37 @@ const adminService = new AdminService();
 const { createError } = require("../middlewares/error-handler");
 
 const registerAdminController = async (req, res, next) => {
-  let { name, email, password } = req.body;
-  let data = { name, email, password };
-  let admin = await adminService.registerAdmin(data, next);
-  if (!admin) return next(createError("Error creating new admin", 500));
-  res.status(200).json({
-    data: {
-      name: admin.name,
-      email: admin.email,
-    },
-  });
+  try {
+    let { username, email, password } = req.body;
+    let data = { username, email, password };
+    let admin = await adminService.registerAdmin(data, next);
+    console.log(admin);
+    if (!admin) return next(createError("Error creating new admin", 500));
+    res.status(200).json({
+      data: {
+        username: admin.username,
+        email: admin.email,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const loginAdminController = async (req, res, next) => {
-  let { email, password } = req.body;
-  let data = { email, password };
-  let admin = await adminService.loginAdmin(data, next);
-  if (!admin) return next(createError("Error Logging in admin", 500));
-  res.status(200).json({
-    data: {
-      token: admin.token,
-    },
-  });
+  try {
+    let { email, password } = req.body;
+    let data = { email, password };
+    let admin = await adminService.loginAdmin(data, next);
+    if (!admin) return next(createError("Error Logging in admin", 500));
+    res.status(200).json({
+      data: {
+        token: admin.token,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = { registerAdminController, loginAdminController };
